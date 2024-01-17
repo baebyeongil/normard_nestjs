@@ -6,32 +6,40 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
+import { MoviesService } from './movies.service';
+import { Movie } from './entities/movie.entity';
+import { CreateMoiveDto } from './dto/create-movie.dto';
+import { UpdateMoiveDto } from './dto/update-movie.dto';
 
 @Controller('movies')
 export class MoviesController {
+  constructor(readonly moviesService: MoviesService) {}
+
   @Get()
-  getAll() {
-    return 'This will return all Movies';
+  getAll(): Movie[] {
+    return this.moviesService.getAll();
   }
 
   @Get('/:id')
-  getOne(@Param('id') movieId: string) {
-    return `This will return one Movie with the ID : ${movieId}`;
+  getOne(@Param('id') movieId: number): Movie {
+    return this.moviesService.getOne(movieId);
   }
 
   @Post()
-  create() {
-    return 'This will create a movie';
+  create(@Body() movieData: CreateMoiveDto) {
+    return this.moviesService.create(movieData);
   }
 
   @Delete('/:id')
-  remove(@Param('id') movieId: string) {
-    return `Tgis will delete a movie with the ID : ${movieId}`;
+  remove(@Param('id') movieId: number): MoviesService {
+    this.moviesService.deleteOne(movieId);
+    return;
   }
 
   @Put('/:id')
-  Put(@Param('id') movieId: string) {
-    return `Tgis will put a movie with the ID : ${movieId}`;
+  Put(@Param('id') movieId: number, @Body() updateData: UpdateMoiveDto) {
+    return this.moviesService.update(movieId, updateData);
   }
 }
